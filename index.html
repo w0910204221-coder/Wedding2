@@ -7,28 +7,30 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+TC:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        // 在頁面最前端定義變數，確保 iframe 讀取時不會報錯
+        var submitted = false;
+    </script>
 
     <style>
         :root {
-            --primary-color: #d4a373;
-            --secondary-color: #8da399;
-            --bg-light: #fbfbf9;
-            --text-dark: #3a3a3a;
-            --font-en: 'Cormorant Garamond', serif;
-            --font-tw: 'Noto Serif TC', serif;
+            --primary: #d4a373;
+            --secondary: #8da399;
+            --bg: #fbfbf9;
+            --text: #3a3a3a;
         }
 
-        body { font-family: var(--font-tw); color: var(--text-dark); background-color: var(--bg-light); margin: 0; padding: 0; }
+        body { font-family: 'Noto Serif TC', serif; color: var(--text); background-color: var(--bg); margin: 0; padding: 0; }
+        h1, h2 { font-family: 'Cormorant Garamond', serif; }
         
         .glass-nav {
-            position: fixed; top: 0; left: 0; width: 100%; height: 70px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
             background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(212, 163, 115, 0.2);
             z-index: 1000; display: flex; justify-content: center; align-items: center;
         }
-        .glass-nav a { color: var(--primary-color); font-weight: 500; padding: 0 10px; }
-
-        /* 全螢幕背景設定 - 完整顯示不裁切 */
+        
         .hero-section {
             height: 100vh; width: 100%; position: relative;
             background-image: url('https://i.postimg.cc/hGQ86pPF/IMG-3378.jpg');
@@ -38,32 +40,28 @@
             background-color: #fbfbf9;
         }
 
-        /* 倒數計時器放置於人物上方 */
-        .hero-timer-pos { position: absolute; top: 10%; width: 100%; z-index: 10; }
-        
-        /* 首頁英文字放置於腰部以下 */
+        .hero-timer-pos { position: absolute; top: 20%; width: 100%; z-index: 10; }
         .hero-text-pos { position: absolute; bottom: 10%; width: 100%; z-index: 10; text-align: center; }
 
         .timer-card {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 10px 15px; border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            min-width: 60px; text-align: center;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 8px 12px; border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            min-width: 50px; text-align: center;
+            border: 1px solid rgba(212, 163, 115, 0.3);
         }
-        .timer-num { font-family: var(--font-en); font-size: 1.5rem; display: block; color: var(--primary-color); }
-        .timer-unit { font-size: 0.5rem; color: #888; letter-spacing: 1px; font-weight: bold; }
+        .timer-num { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; display: block; color: var(--primary); font-weight: 600; }
+        .timer-unit { font-size: 0.5rem; color: #888; letter-spacing: 0.5px; }
 
-        .section-container { padding: 80px 20px; max-width: 500px; margin: auto; }
         .v-card { background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .form-control { width: 100%; padding: 12px; border: 1px solid #d4a373; border-radius: 8px; margin-top: 5px; background: white; }
-        .submit-btn { background: var(--primary-color); color: white; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .submit-btn:hover { opacity: 0.9; }
+        .submit-btn { background: var(--primary); color: white; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
     </style>
 </head>
 <body>
 
     <nav class="glass-nav">
-        <ul class="flex gap-4 text-sm font-medium">
+        <ul class="flex gap-6 text-sm font-medium" style="color: var(--primary);">
             <li><a href="#about">關於我們</a></li>
             <li><a href="#details">婚禮詳情</a></li>
             <li><a href="#rsvp">出席回函</a></li>
@@ -72,147 +70,156 @@
 
     <header class="hero-section">
         <div class="hero-timer-pos">
-            <div class="flex gap-2 justify-center">
+            <div class="flex gap-2 justify-center items-center">
                 <div class="timer-card"><span class="timer-num" id="days">00</span><span class="timer-unit">DAYS</span></div>
+                <div class="h-6 w-px bg-[var(--primary)] opacity-30"></div>
                 <div class="timer-card"><span class="timer-num" id="hours">00</span><span class="timer-unit">HRS</span></div>
+                <div class="h-6 w-px bg-[var(--primary)] opacity-30"></div>
                 <div class="timer-card"><span class="timer-num" id="mins">00</span><span class="timer-unit">MINS</span></div>
+                <div class="h-6 w-px bg-[var(--primary)] opacity-30"></div>
                 <div class="timer-card"><span class="timer-num" id="secs">00</span><span class="timer-unit">SECS</span></div>
             </div>
         </div>
-
         <div class="hero-text-pos">
-            <h1 class="text-4xl" style="font-family: var(--font-en); color: var(--primary-color);">Howard & Evelyn</h1>
+            <h1 class="text-4xl" style="font-family: 'Cormorant Garamond', serif; color: var(--primary);">Howard & Evelyn</h1>
         </div>
     </header>
 
-    <section id="about" class="section-container">
-        <h2 class="text-2xl font-bold mb-6 text-center text-[var(--primary-color)]">關於我們</h2>
-        <div class="v-card">
-            <p class="text-center leading-loose text-gray-700">
-                從兩個人的日常，慢慢變成一個家的模樣。<br>
-                每一個平凡的今天，都因彼此變得特別。<br>
-                謝謝一路陪伴我們的你，誠摯邀請你，一起見證我們人生中最重要的時刻。
-            </p>
-        </div>
-    </section>
-
-    <section id="details" class="section-container">
-        <h2 class="text-2xl font-bold mb-6 text-center text-[var(--primary-color)]">婚禮詳情</h2>
-        <div class="v-card">
-            <p class="font-bold mb-2">日期：2026 年 11 月 22 日 (星期日)</p>
-            <p class="mb-2">時間：晚宴 18:30 (準時開席)</p>
-            <p class="no-wrap mb-2">席設：皇家薇庭-巴洛克廳</p>
-            <p class="no-wrap mb-4">地址：桃園市桃園區莊敬路二段369號</p>
-            
-            <div class="border-t pt-4">
-                <details class="cursor-pointer">
-                    <summary class="font-semibold text-[var(--secondary-color)]">交通指引 (Traffic Guide)</summary>
-                    <div class="mt-3 space-y-4 text-sm text-gray-600">
-                        <div>
-                            <p class="font-bold text-gray-800">🚗 自行開車前往</p>
-                            <p class="no-wrap">皇家薇庭設有專屬免費停車場，建議開車前往最為便利。</p>
-                        </div>
-                        <div>
-                            <p class="font-bold text-gray-800">🚌 大眾運輸</p>
-                            <p class="no-wrap">搭乘桃園捷運或市區公車至「中正藝文特區」站下車，轉乘計程車即可快速抵達。</p>
-                        </div>
-                    </div>
-                </details>
+    <main class="max-w-md mx-auto p-4 space-y-8">
+        <section id="about">
+            <h2 class="text-2xl font-bold mb-6 text-center" style="color: var(--primary);">關於我們</h2>
+            <div class="v-card">
+                <p class="text-center leading-loose text-gray-700">
+                    從兩個人的日常，慢慢變成一個家的模樣。<br>
+                    每一個平凡的今天，都因彼此變得特別。<br>
+                    謝謝一路陪伴我們的你，誠摯邀請你，一起見證我們人生中最重要的時刻。
+                </p>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="rsvp" class="section-container">
-        <h2 class="text-2xl font-bold mb-6 text-center text-[var(--primary-color)]">出席回函</h2>
-        <div class="v-card">
-            <!-- 隱藏 iframe -->
-            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted){alert('感謝您的回覆，我們已收到！')}"></iframe>
-            
-            <form id="rsvp-form" action="https://docs.google.com/forms/d/e/1FAIpQLSePgYNpnsn8spcMjjurc6ZbDe-i817d3aP0jydembTAukXcSw/formResponse" method="POST" target="hidden_iframe" onsubmit="submitted=true;">
+        <section id="details">
+            <h2 class="text-2xl font-bold mb-6 text-center" style="color: var(--primary);">婚禮詳情</h2>
+            <div class="v-card">
+                <p class="font-bold mb-2">日期：2026 年 11 月 22 日</p>
+                <p class="mb-2">時間：晚宴 18:30 (準時開席)</p>
+                <p class="no-wrap mb-2">席設：<span class="whitespace-nowrap">皇家薇庭-巴洛克廳</span></p>
+                <p class="no-wrap mb-4">地址：<span class="whitespace-nowrap">桃園市桃園區莊敬路二段369號</span></p>
                 
-                <div class="mb-4">
-                    <label class="block text-sm font-bold">姓名 NAME</label>
-                    <input type="text" name="entry.1886153940" class="form-control" required placeholder="請輸入姓名">
+                <div class="border-t pt-4">
+                    <details class="cursor-pointer group">
+                        <summary class="font-semibold text-[var(--secondary)] list-none flex justify-between items-center">
+                            交通指引 (Traffic Guide)
+                            <span class="group-open:rotate-180 transition-transform">▼</span>
+                        </summary>
+                        <div class="mt-3 space-y-4 text-sm text-gray-600">
+                            <div>
+                                <p class="font-bold text-gray-800">🚗 自行開車前往</p>
+                                <p class="whitespace-nowrap">皇家薇庭設有專屬免費停車場。</p>
+                            </div>
+                            <div>
+                                <p class="font-bold text-gray-800">🚌 大眾運輸</p>
+                                <p class="whitespace-nowrap">搭乘市區公車至「中正藝文特區」站。</p>
+                            </div>
+                        </div>
+                    </details>
                 </div>
+            </div>
+        </section>
 
-                <div class="mb-4">
-                    <label class="block text-sm font-bold">您是哪方的親友 RELATIONSHIP</label>
-                    <select name="entry.2044940604" class="form-control" required>
-                        <option value="">請選擇</option>
-                        <option value="新郎親戚">新郎親戚</option>
-                        <option value="新郎高中朋友">新郎高中朋友</option>
-                        <option value="新郎大學朋友">新郎大學朋友</option>
-                        <option value="新郎同事">新郎同事</option>
-                        <option value="新郎其他朋友">新郎其他朋友</option>
-                        <option value="新娘親戚">新娘親戚</option>
-                        <option value="新娘國中朋友">新娘國中朋友</option>
-                        <option value="新娘高中朋友">新娘高中朋友</option>
-                        <option value="新娘大學朋友">新娘大學朋友</option>
-                        <option value="新娘同事">新娘同事</option>
-                        <option value="新娘其他朋友">新娘其他朋友</option>
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label class="block text-sm font-bold">參加晚宴人數 ATTENDANCE</label>
-                    <select name="entry.1567260636" id="attendance" class="form-control" onchange="toggleFields()">
-                        <option value="0">0位</option>
-                        <option value="1">1位</option>
-                        <option value="2">2位</option>
-                        <option value="3">3位</option>
-                        <option value="4">4位</option>
-                        <option value="5">5位以上</option>
-                    </select>
-                </div>
-
-                <div id="extra-fields" style="display:none;">
+        <section id="rsvp">
+            <h2 class="text-2xl font-bold mb-6 text-center" style="color: var(--primary);">出席回函</h2>
+            <div class="v-card">
+                <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(typeof submitted !== 'undefined' && submitted){document.getElementById('rsvp-form').style.display='none'; document.getElementById('thank-you').style.display='block';}"></iframe>
+                <div id="thank-you" style="display:none; text-align:center; padding: 20px;">感謝您的回覆，我們已收到！</div>
+                
+                <form id="rsvp-form" action="https://docs.google.com/forms/d/e/1FAIpQLSePgYNpnsn8spcMjjurc6ZbDe-i817d3aP0jydembTAukXcSw/formResponse" method="POST" target="hidden_iframe" onsubmit="submitted=true;">
+                    
                     <div class="mb-4">
-                        <label class="block text-sm font-bold">飲食需求 DIETARY</label>
-                        <select name="entry.1945371672" id="dietary" class="form-control" onchange="toggleDietary()">
-                            <option value="無特殊需求">無特殊需求</option>
-                            <option value="素食">素食</option>
+                        <label class="block text-sm font-bold">姓名 NAME</label>
+                        <input type="text" name="entry.1886153940" class="form-control" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold">哪方親友 RELATIONSHIP</label>
+                        <select name="entry.2044940604" class="form-control" required>
+                            <option value="">請選擇</option>
+                            <option value="新郎親戚">新郎親戚</option>
+                            <option value="新郎高中朋友">新郎高中朋友</option>
+                            <option value="新郎大學朋友">新郎大學朋友</option>
+                            <option value="新郎同事">新郎同事</option>
+                            <option value="新郎其他朋友">新郎其他朋友</option>
+                            <option value="新娘親戚">新娘親戚</option>
+                            <option value="新娘國中朋友">新娘國中朋友</option>
+                            <option value="新娘高中朋友">新娘高中朋友</option>
+                            <option value="新娘大學朋友">新娘大學朋友</option>
+                            <option value="新娘同事">新娘同事</option>
+                            <option value="新娘其他朋友">新娘其他朋友</option>
                         </select>
                     </div>
-                    <div id="veg-qty-field" style="display:none;" class="mb-4">
-                        <label class="block text-sm font-bold">請填寫素食份數</label>
-                        <input type="number" name="entry.2029074728" class="form-control" placeholder="請填寫數字">
-                    </div>
+
                     <div class="mb-4">
-                        <label class="block text-sm font-bold">是否需要兒童椅 KIDS CHAIR</label>
-                        <select name="entry.1887387302" class="form-control">
-                            <option value="不需要">不需要</option>
-                            <option value="需要">需要</option>
+                        <label class="block text-sm font-bold">參加晚宴人數 ATTENDANCE</label>
+                        <select name="entry.1567260636" id="attendance" class="form-control" onchange="toggleFields()">
+                            <option value="0">0 位</option>
+                            <option value="1">1 位</option>
+                            <option value="2">2 位</option>
+                            <option value="3">3 位</option>
+                            <option value="4">4 位</option>
+                            <option value="5">5 位以上</option>
                         </select>
                     </div>
-                </div>
 
-                <div class="mb-4">
-                    <label class="block text-sm font-bold">喜帖收取方式 INVITATION METHOD</label>
-                    <select name="entry.867299550" id="invitation-type" class="form-control" onchange="toggleInvitation()">
-                        <option value="">請選擇</option>
-                        <option value="紙本喜帖">紙本喜帖</option>
-                        <option value="電子喜帖">電子喜帖</option>
-                    </select>
-                </div>
+                    <div id="extra-fields" style="display:none;">
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold">飲食需求 DIETARY</label>
+                            <select name="entry.1945371672" id="dietary" class="form-control" onchange="toggleDietary()">
+                                <option value="無特殊需求">無特殊需求</option>
+                                <option value="素食">素食</option>
+                            </select>
+                        </div>
+                        <div id="veg-qty-field" style="display:none;" class="mb-4">
+                            <label class="block text-sm font-bold">請填寫素食份數 VEG QTY</label>
+                            <input type="number" name="entry.2029074728" class="form-control" placeholder="請填寫數字">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold">是否需要兒童椅 KIDS CHAIR</label>
+                            <select name="entry.1887387302" class="form-control">
+                                <option value="不需要">不需要</option>
+                                <option value="需要">需要</option>
+                            </select>
+                        </div>
+                    </div>
 
-                <div id="paper-info" style="display:none;" class="mb-4 p-3 bg-gray-50 rounded border border-gray-200">
-                    <p class="text-xs mb-2 font-bold text-gray-700">需要紙本喜帖請填寫<br>請提供您的收件資料，讓我們寄喜帖給您（收件人/地址/電話）</p>
-                    <textarea name="entry.845217517" class="form-control"></textarea>
-                </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold">喜帖收取方式 INVITATION METHOD</label>
+                        <select name="entry.867299550" id="invitation-type" class="form-control" onchange="toggleInvitation()">
+                            <option value="">請選擇</option>
+                            <option value="紙本喜帖">紙本喜帖</option>
+                            <option value="電子喜帖">電子喜帖</option>
+                        </select>
+                    </div>
 
-                <div id="elec-info" style="display:none;" class="mb-4 p-3 bg-gray-50 rounded border border-gray-200">
-                    <p class="text-xs mb-2 font-bold text-gray-700">需要電子喜帖請填寫<br>請提供您的Email/LINE ID/IG帳號(擇一填寫)</p>
-                    <textarea name="entry.2093466386" class="form-control"></textarea>
-                </div>
+                    <div id="paper-info" style="display:none;" class="mb-4 p-3 bg-gray-50 rounded border border-gray-200">
+                        <p class="text-xs mb-2 font-bold text-gray-700">需要紙本喜帖請填寫<br>請提供您的收件資料，讓我們寄喜帖給您<br>（收件人/地址/電話）</p>
+                        <textarea name="entry.845217517" class="form-control"></textarea>
+                    </div>
 
-                <button type="submit" class="submit-btn">送出回函</button>
-            </form>
-        </div>
-    </section>
+                    <div id="elec-info" style="display:none;" class="mb-4 p-3 bg-gray-50 rounded border border-gray-200">
+                        <p class="text-xs mb-2 font-bold text-gray-700">需要電子喜帖請填寫<br>請提供您的Email/LINE ID/IG帳號(擇一填寫)</p>
+                        <textarea name="entry.2093466386" class="form-control"></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">送出回函</button>
+                </form>
+            </div>
+        </section>
+    </main>
 
     <script>
-        var submitted = false;
+        // 移除重複定義
+        // var submitted = false; 
 
+        // Timer Logic
         const target = new Date("2026-11-22T18:30:00").getTime();
         setInterval(() => {
             const now = new Date().getTime();
@@ -223,6 +230,7 @@
             document.getElementById('secs').innerText = Math.max(0, Math.floor((diff % (1000 * 60)) / 1000));
         }, 1000);
 
+        // UI Logic
         function toggleFields() {
             const val = parseInt(document.getElementById('attendance').value);
             document.getElementById('extra-fields').style.display = (val > 0) ? 'block' : 'none';
